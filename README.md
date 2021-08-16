@@ -1,4 +1,4 @@
-## android openssl 1.0.2
+## android openssh-portable-V_5_9
 
 ### 准备 下载NDK 编译器 android-ndk-r10e。
 ### 编译openssl-OpenSSL_1_0_2-stable https://github.com/rocktan001/openssh-portable-V_5_9
