@@ -44,7 +44,7 @@
  */
 
 /* OPENBSD ORIGINAL: lib/libc/net/getrrsetbyname.c */
-
+#ifndef ANDROID
 #include "includes.h"
 
 #ifndef HAVE_GETRRSETBYNAME
@@ -608,3 +608,4 @@ count_dns_rr(struct dns_rr *p, u_int16_t class, u_int16_t type)
 }
 
 #endif /* !defined(HAVE_GETRRSETBYNAME) */
+#endif

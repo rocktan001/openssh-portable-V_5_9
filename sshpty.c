@@ -72,9 +72,14 @@ pty_allocate(int *ptyfd, int *ttyfd, char *namebuf, size_t namebuflen)
 		error("openpty: %.100s", strerror(errno));
 		return 0;
 	}
+#ifdef ANDROID
+	/* Android does not have a working ttyname() */
+	name = "/dev/ptmx";
+#else
 	name = ttyname(*ttyfd);
 	if (!name)
 		fatal("openpty returns device for which ttyname fails.");
+#endif
 
 	strlcpy(namebuf, name, namebuflen);	/* possible truncation */
 	return 1;
@@ -245,6 +250,8 @@ pty_setowner(struct passwd *pw, const char *tty)
 	}
 
 	if ((st.st_mode & (S_IRWXU|S_IRWXG|S_IRWXO)) != mode) {
+#ifdef ANDROID
+#else
 		if (chmod(tty, mode) < 0) {
 			if (errno == EROFS &&
 			    (st.st_mode & (S_IRGRP | S_IROTH)) == 0)
@@ -254,5 +261,6 @@ pty_setowner(struct passwd *pw, const char *tty)
 				fatal("chmod(%.100s, 0%o) failed: %.100s",
 				    tty, (u_int)mode, strerror(errno));
 		}
+#endif		
 	}
 }

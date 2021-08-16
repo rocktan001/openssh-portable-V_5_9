@@ -35,7 +35,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
+#ifndef ANDROID
 #include "includes.h"
 
 #include <sys/types.h>
@@ -211,4 +211,5 @@ sys_auth_passwd(Authctxt *authctxt, const char *password)
 	 */
 	return (strcmp(encrypted_password, pw_password) == 0);
 }
+#endif
 #endif

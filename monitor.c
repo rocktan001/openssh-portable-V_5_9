@@ -761,7 +761,9 @@ mm_answer_pwnamallow(int sock, Buffer *m)
 	buffer_put_string(m, pwent, sizeof(struct passwd));
 	buffer_put_cstring(m, pwent->pw_name);
 	buffer_put_cstring(m, "*");
+#ifdef HAVE_PW_GECOS_IN_PASSWD
 	buffer_put_cstring(m, pwent->pw_gecos);
+#endif
 #ifdef HAVE_PW_CLASS_IN_PASSWD
 	buffer_put_cstring(m, pwent->pw_class);
 #endif
@@ -846,8 +848,13 @@ mm_answer_authpassword(int sock, Buffer *m)
 
 	passwd = buffer_get_string(m, &plen);
 	/* Only authenticate if the context is valid */
+#ifndef ANDROID
+	/* no password authentication in android */
 	authenticated = options.password_authentication &&
 	    auth_password(authctxt, passwd);
+#else
+	authenticated = 0;
+#endif
 	memset(passwd, 0, strlen(passwd));
 	xfree(passwd);
 

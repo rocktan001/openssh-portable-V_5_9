@@ -443,9 +443,15 @@ secure_filename(FILE *f, const char *file, struct passwd *pw,
 	if (fstat(fileno(f), &st) < 0 ||
 	    (st.st_uid != 0 && st.st_uid != uid) ||
 	    (st.st_mode & 022) != 0) {
-		snprintf(err, errlen, "bad ownership or modes for file %s",
-		    buf);
-		return -1;
+#ifdef ANDROID
+		/* needed to allow root login on android */
+		if (getuid() != 0)
+#endif
+	    {
+			snprintf(err, errlen, "bad ownership or modes for file %s",
+				buf);
+			return -1;
+		}
 	}
 
 	/* for each component of the canonical path, walking upwards */
@@ -456,6 +462,8 @@ secure_filename(FILE *f, const char *file, struct passwd *pw,
 		}
 		strlcpy(buf, cp, sizeof(buf));
 
+#ifndef ANDROID
+	    /* /data is owned by system user, which causes this check to fail */
 		if (stat(buf, &st) < 0 ||
 		    (st.st_uid != 0 && st.st_uid != uid) ||
 		    (st.st_mode & 022) != 0) {
@@ -463,7 +471,7 @@ secure_filename(FILE *f, const char *file, struct passwd *pw,
 			    "bad ownership or modes for directory %s", buf);
 			return -1;
 		}
-
+#endif
 		/* If are past the homedir then we can stop */
 		if (comparehome && strcmp(homedir, buf) == 0)
 			break;
@@ -682,7 +690,9 @@ fakepw(void)
 	fake.pw_name = "NOUSER";
 	fake.pw_passwd =
 	    "$2a$06$r3.juUaHZDlIbQaO2dS9FuYxL1W9M81R1Tc92PoSNmzvpEqLkLGrK";
+#ifdef HAVE_PW_GECOS_IN_PASSWD
 	fake.pw_gecos = "NOUSER";
+#endif
 	fake.pw_uid = privsep_pw == NULL ? (uid_t)-1 : privsep_pw->pw_uid;
 	fake.pw_gid = privsep_pw == NULL ? (gid_t)-1 : privsep_pw->pw_gid;
 #ifdef HAVE_PW_CLASS_IN_PASSWD

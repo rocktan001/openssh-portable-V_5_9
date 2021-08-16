@@ -22,6 +22,7 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef ANDROID
 #include "includes.h"
 
 #include <sys/types.h>
@@ -115,3 +116,4 @@ shadow_pw(struct passwd *pw)
 
 	return pw_password;
 }
+#endif
