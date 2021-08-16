@@ -8,4 +8,4 @@
 #### source generate_standalone_toolchain.sh
 #### ./configure --host=arm-linux --sysconfdir=${OPENSSH_DIR}/etc/ssh --with-ssl-dir=${OPENSSL_DIR}
 #### cp prebuilt-intermediates/config.h ./config.h
-### make && make install
+#### make && make install
