@@ -5,6 +5,7 @@
 ### 配置文件generate_standalone_toolchain.sh
 #### 注意：配置文件中更改opssl 库目录 。OPENSSL_DIR=/media/disk2/third/android/openssl-OpenSSL_1_0_2-stable/
 
-### source generate_standalone_toolchain.sh
-### ./configure --host=arm-linux --sysconfdir=${OPENSSH_DIR}/etc/ssh --with-ssl-dir=${OPENSSL_DIR}
+#### source generate_standalone_toolchain.sh
+#### ./configure --host=arm-linux --sysconfdir=${OPENSSH_DIR}/etc/ssh --with-ssl-dir=${OPENSSL_DIR}
+#### cp prebuilt-intermediates/config.h ./config.h
 ### make && make install
